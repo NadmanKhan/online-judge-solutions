@@ -4,7 +4,7 @@ using namespace std;
 constexpr int cap_max = 2000;
 constexpr int n_max = 2000;
 
-int cap;           // Capacity of the bag
+int cap;           // Max capacity of the bag
 int n;             // Number of items to store in the bag
 int sizes[n_max];  // `sizes[i]` = size of the i-th item
 int values[n_max]; // `values[i]` = value of the i-th item
@@ -12,9 +12,11 @@ int values[n_max]; // `values[i]` = value of the i-th item
 /**
  * @brief
  * `dp[i][cap_rem]` = catched/memoized value at the state `(i, cap_rem)`.
- * -1 marks uncatched state.
+ * -1 marks uncatched state. Each dimension declared with +5 size
+ * to avoid headache of 0-based indexing.
  */
-int dp[n_max + 10][cap_max + 10];
+int dp[n_max + 5][cap_max + 5]; 
+
 
 /**
  * @brief Recursively finds and returns the answer.
@@ -32,7 +34,8 @@ int find_ans(int i = 0, int cap_rem = cap) {
 
     // ** General case **
 
-    // Check memoized value at the current current state
+    // Check if catche value exists at the current state.
+    // If yes, then return that value.
     if (dp[i][cap_rem] != -1) {
         return dp[i][cap_rem];
     }
@@ -45,7 +48,7 @@ int find_ans(int i = 0, int cap_rem = cap) {
                    ? values[i] + find_ans(i + 1, cap_rem - sizes[i])
                    : 0;
 
-    // Get and memoize the result
+    // Get and catche the result
     int result = max(skip, take);
     dp[i][cap_rem] = result;
 
