@@ -13,7 +13,7 @@ int values[n_max];          // `values[i]` = value of the i-th item
 int dp[n_max][cap_max + 1]; // `dp[i][cap_rem]` = catched/memoized value for the state `(i, cap_rem)`. A value of -1 indicates no/null value.
 
 /**
- * @brief Recursively finds and returns the answer.
+ * @brief Recursively computes and returns the answer.
  *
  * @param i [state variable] Index of the item being considered
  * @param cap_rem [state variable] Remaining capacity
@@ -50,8 +50,8 @@ int compute_ans(int i = 0, int cap_rem = cap) {
 }
 
 int main() {
-    std::ios_base::sync_with_stdio(false);
-    std::cin.tie(nullptr);
+    ios_base::sync_with_stdio(false);
+    cin.tie(nullptr);
 
     // ** Input & init **
 
