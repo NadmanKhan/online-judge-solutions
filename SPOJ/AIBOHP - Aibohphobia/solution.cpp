@@ -6,16 +6,20 @@ using namespace std;
 constexpr int len_max = 6100; // Max possible length of the string in any test
 
 string s;                 // Input string
-int dp[len_max][len_max]; // `dp[l][r]` == the catched/memoized value for the state `(l, r)`. A value of -1 indicates no/null value.
+int dp[len_max][len_max]; // `dp[l][r]` == the cached/memoized value for the state `(l, r)`. A value of -1 indicates no/null value.
 
 /**
- * @brief Recursively computes and returns the answer.
+ * @brief Computes and returns the "palindrome distance" --- the number of
+ * character insertions required to make a palindrome --- of the substring in the 
+ * range `[l, r]` of the input string `s` (declared globally). This is a recursive
+ * function, with caching/memoization (dynamic programming) using the global array
+ * `dp` for optimization.
  *
  * @param l [state variable] The left pointer of the substring being considered
  * @param r [state variable] The right pointer of the substring being considered
  * @return int
  */
-int compute_ans(int l = 0, int r = (int)s.size() - 1) {
+int palin_dist(int l = 0, int r = (int)s.size() - 1) {
     // ** Base case **
 
     if (l >= r) {
@@ -24,8 +28,10 @@ int compute_ans(int l = 0, int r = (int)s.size() - 1) {
 
     // ** General case **
 
-    // Check if the current state has a catched value. If yes, then return the
-    // value immediately without any computation.
+    /**
+     * Check if the current state has a cached value. If yes, then return the
+     * value immediately without any further computation.
+     */
     if (dp[l][r] != -1) {
         return dp[l][r];
     }
@@ -33,22 +39,26 @@ int compute_ans(int l = 0, int r = (int)s.size() - 1) {
     int result = 0;
 
     if (s[l] == s[r]) {
-        // If `s[l] == s[r]`, we don't need an insert operation at this state.
-        // Therefore, the result of the current state is just the result of
-        // the next recursive call's state (where BOTH the pointers are
-        // moved one place).
-        result = compute_ans(l + 1, r - 1);
+        /**
+         * For `s[l] == s[r]`, we don't need an insert operation at this state.
+         * Therefore, the result (operational cost) of the current state is
+         * just the result of the following call's state (where BOTH the pointers
+         * `l` and `r` are moved one place inwards).
+         */
+        result = palin_dist(l + 1, r - 1);
     } else {
-        // If `s[l] != s[r]`, we need to insert one character at either
-        // `l` (matching `s[r]`), or at `r` (matching `s[l]`). Hence, add
-        // 1 to result (for the single insert operation) and then add
-        // to it the smaller of the results between the state when `l` is
-        // moved one place and the state when `r` is moved one place.
-        result = 1 + min(compute_ans(l + 1, r),
-                         compute_ans(l, r - 1));
+        /**
+         * For `s[l] != s[r]`, we need to insert one character at either
+         * `l` (matching `s[r]`) or at `r` (matching `s[l]`). Hence, add
+         * 1 to the result (for the single insert operation) and then add
+         * to it the smaller of the results between the two following states
+         * achieved by moving either `l` or `r` one place inwards.
+         */
+        result = 1 + min(palin_dist(l + 1, r),
+                         palin_dist(l, r - 1));
     }
 
-    // Catche the result.
+    // Cache the result.
     dp[l][r] = result;
 
     return result;
@@ -62,7 +72,7 @@ void runcase() {
 
     // ** Solve **
 
-    int ans = compute_ans();
+    int ans = palin_dist();
 
     // ** Output **
 
