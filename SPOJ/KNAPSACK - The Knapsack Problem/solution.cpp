@@ -13,13 +13,17 @@ int values[n_max];          // `values[i]` = value of the i-th item
 int dp[n_max][cap_max + 1]; // `dp[i][cap_rem]` = catched/memoized value for the state `(i, cap_rem)`. A value of -1 indicates no/null value.
 
 /**
- * @brief Recursively computes and returns the answer.
+ * @brief Computes and returns the max possible total value from items, starting
+ * from the `i`-th item and going up to the `(n - 1)`-th item, that can be
+ * stored in the bag without exceeding its remaining capacity `cap_rem`. This is a
+ * recursive function, with caching/memoization (dynamic programming) using the
+ * global array `dp` for optimization. It solves the classic Knapsack Problem.
  *
  * @param i [state variable] Index of the item being considered
  * @param cap_rem [state variable] Remaining capacity
  * @return int
  */
-int compute_ans(int i = 0, int cap_rem = cap) {
+int knapsack(int i = 0, int cap_rem = cap) {
     // ** Base case **
 
     if (i == n) {
@@ -35,11 +39,11 @@ int compute_ans(int i = 0, int cap_rem = cap) {
     }
 
     // Result when the item is skipped
-    int skip = compute_ans(i + 1, cap_rem);
+    int skip = knapsack(i + 1, cap_rem);
 
     // Result when the item is taken
     int take = (cap_rem >= sizes[i])
-                   ? values[i] + compute_ans(i + 1, cap_rem - sizes[i])
+                   ? values[i] + knapsack(i + 1, cap_rem - sizes[i])
                    : 0;
 
     // Get and catche the result
@@ -63,7 +67,7 @@ int main() {
 
     // ** Solve **
 
-    int ans = compute_ans();
+    int ans = knapsack();
 
     // ** Output **
 
