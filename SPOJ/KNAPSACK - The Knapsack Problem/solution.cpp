@@ -10,7 +10,7 @@ int cap;                    // Capacity of the bag
 int n;                      // Number of items to store in the bag
 int sizes[n_max];           // `sizes[i]` = size of the i-th item
 int values[n_max];          // `values[i]` = value of the i-th item
-int dp[n_max][cap_max + 1]; // `dp[i][cap_rem]` = catched/memoized value for the state `(i, cap_rem)`. A value of -1 indicates no/null value.
+int dp[n_max][cap_max + 1]; // `dp[i][cap_rem]` = cached/memoized value for the state `(i, cap_rem)`. A value of -1 indicates no/null value.
 
 /**
  * @brief Computes and returns the max possible total value from items, starting
@@ -32,7 +32,7 @@ int knapsack(int i = 0, int cap_rem = cap) {
 
     // ** General case **
 
-    // Check if catche value exists at the current state.
+    // Check if cache value exists at the current state.
     // If yes, then return that value.
     if (dp[i][cap_rem] != -1) {
         return dp[i][cap_rem];
@@ -46,7 +46,7 @@ int knapsack(int i = 0, int cap_rem = cap) {
                    ? values[i] + knapsack(i + 1, cap_rem - sizes[i])
                    : 0;
 
-    // Get and catche the result
+    // Get and cache the result
     int result = max(skip, take);
     dp[i][cap_rem] = result;
 
