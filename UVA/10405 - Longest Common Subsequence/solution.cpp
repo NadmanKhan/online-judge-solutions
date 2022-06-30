@@ -9,7 +9,7 @@ string a; // First of the input string pairs
 string b; // Second of the input string pairs
 int dp[len_max][len_max];
 
-int lcs(int i = 0, int j = 0) {
+int lcs_len(int i = 0, int j = 0) {
     if (i == a.size() || j == b.size()) {
         return 0;
     }
@@ -19,9 +19,9 @@ int lcs(int i = 0, int j = 0) {
     }
     int result = 0;
     if (a[i] == b[j]) {
-        result = 1 + lcs(i + 1, j + 1);
+        result = 1 + lcs_len(i + 1, j + 1);
     } else {
-        result = max(lcs(i + 1, j), lcs(i, j + 1));
+        result = max(lcs_len(i + 1, j), lcs_len(i, j + 1));
     }
 
     dp[i][j] = result;
@@ -36,7 +36,7 @@ void runcase() {
 
     // ** Solve **
 
-    int ans = lcs();
+    int ans = lcs_len();
 
     // ** Output **
 
@@ -48,7 +48,7 @@ int main() {
     cin.tie(nullptr);
 
     // ** Input & test-case handling **
-    
+
     while (getline(cin, a) && getline(cin, b)) {
         runcase();
     }
